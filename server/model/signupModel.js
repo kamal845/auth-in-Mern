@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const signupSchema=mongoose.Schema({
+const signupSchema= mongoose.Schema({
 Name:{
     type:String,
     required:true

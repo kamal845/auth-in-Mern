@@ -1,5 +1,7 @@
+// require('dotenv').config();
 const mongoose = require('mongoose');
-const dbConnection="mongodb://localhost:27017/login-signup";
+// const dbConnection=process.env.MONGODB_URL;
+const dbConnection="mongodb://localhost:27017/Auth-mern";
 const connectDB=async()=>{
 try {
   await mongoose.connect(dbConnection,{
