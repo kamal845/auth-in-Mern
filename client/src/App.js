@@ -1,7 +1,5 @@
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
 import Signup from './signup';
 import Login from './login';
 import Dashboard from './dashboard';

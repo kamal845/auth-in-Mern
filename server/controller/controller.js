@@ -98,7 +98,7 @@ module.exports = {
       res.status(201).json({
         status: "success",
         message: "Data is created successfully",
-        data: signups,
+        // data: signups,
       });
     } catch (error) {
       console.error("Error during signup:", error);
