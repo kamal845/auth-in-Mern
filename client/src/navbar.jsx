@@ -3,13 +3,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 axios.defaults.baseURL = 'http://localhost:4000';
-
+axios.defaults.withCredentials = true;
 const Navbar = () => {
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      const response = await axios.get('/logout');
+      const token = localStorage.getItem('token');
+      const response = await axios.get('/logout', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       if (response.data.status === 'success') {
         localStorage.removeItem('token');
         navigate('/login');
@@ -20,6 +25,9 @@ const Navbar = () => {
       console.error('Error during logout:', error);
     }
   };
+
+  
+  
 
   return (
     <nav>

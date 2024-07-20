@@ -14,8 +14,8 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('/login', {
-        Email: email,
-        Password: password,
+        email: email,
+        password: password,
       });
       setMessage(response.data.message);
       if (response.data.status === 'success') {
@@ -25,6 +25,7 @@ const Login = () => {
         navigate('/dashboard');
       }
     } catch (error) {
+      console.error("Login error:", error);  // Debugging
       setMessage(error.response?.data?.message || 'Login failed');
     }
   };
