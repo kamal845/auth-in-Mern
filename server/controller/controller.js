@@ -110,48 +110,87 @@ module.exports = {
       });
     }
   },
-  logout: async (req, res) => {
-    try {
-      // Get token from cookies
-      const token = req.cookies.token;
-      if (!token) {
-          return res.status(401).json({
-              status: "error",
-              message: "No token provided, user not logged in"
-          });
+//   logout: async (req, res) => {
+//     try {
+//       // Get token from cookies
+//       const token = req.cookies.token;
+//       if (!token) {
+//           return res.status(401).json({
+//               status: "error",
+//               message: "No token provided, user not logged in"
+//           });
+//       }
+
+//       // Verify the token
+//       jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+//           if (err) {
+//               return res.status(401).json({
+//                   status: "error",
+//                   message: "Failed to authenticate token"
+//               });
+//           }
+
+//           // Optionally: Remove token from loginModel if you are storing it there
+//           await loginModel.updateOne(
+//               { token: token },
+//               { $unset: { token: "" } }
+//           );
+
+//           // Clear the token cookie
+//           res.clearCookie('token');
+
+//           // Respond with success message
+//           return res.status(200).json({
+//               status: "success",
+//               message: "Logout successful"
+//           });
+//       });
+//   } catch (error) {
+//       console.error("Error during logout:", error);
+//       return res.status(500).json({
+//           status: "error",
+//           message: "Internal server error",
+//           data: error.message
+//       });
+//   }
+// }
+logout: async (req, res) => {
+  try {
+    const token = req.header('Authorization')?.replace('Bearer ', '') || req.cookies.token;
+    if (!token) {
+      return res.status(401).json({
+        status: "error",
+        message: "No token provided, user not logged in"
+      });
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
+      if (err) {
+        return res.status(401).json({
+          status: "error",
+          message: "Failed to authenticate token"
+        });
       }
 
-      // Verify the token
-      jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-          if (err) {
-              return res.status(401).json({
-                  status: "error",
-                  message: "Failed to authenticate token"
-              });
-          }
+      await loginModel.updateOne(
+        { token: token },
+        { $unset: { token: "" } }
+      );
 
-          // Optionally: Remove token from loginModel if you are storing it there
-          await loginModel.updateOne(
-              { token: token },
-              { $unset: { token: "" } }
-          );
+      res.clearCookie('token');
 
-          // Clear the token cookie
-          res.clearCookie('token');
-
-          // Respond with success message
-          return res.status(200).json({
-              status: "success",
-              message: "Logout successful"
-          });
+      return res.status(200).json({
+        status: "success",
+        message: "Logout successful"
       });
+    });
   } catch (error) {
-      console.error("Error during logout:", error);
-      return res.status(500).json({
-          status: "error",
-          message: "Internal server error",
-          data: error.message
-      });
+    console.error("Error during logout:", error);
+    return res.status(500).json({
+      status: "error",
+      message: "Internal server error",
+      data: error.message
+    });
   }
 }
 };

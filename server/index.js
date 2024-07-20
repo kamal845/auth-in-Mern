@@ -1,13 +1,19 @@
 const express=require('express');
 const app=express();
-const cors=require('cors');
 const connectDB=require('./database/database');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
 app.use(cookieParser());
 const PORT=process.env.PORT || 4000
 app.use(express.json());
-app.use(cors());
+const cors = require('cors');
+const corsOptions = {
+    origin: 'http://localhost:3000', // specify your frontend URL
+    credentials: true // This is needed to allow cookies to be sent with requests
+  };
+  
+  app.use(cors(corsOptions));
+// app.use(cors());
 const route=require('./routes/route');
 app.use('/', route);
 app.use(express.urlencoded({ extended: true }));
